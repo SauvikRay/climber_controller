@@ -7,10 +7,7 @@ import '../theme/theme.dart';
 class ControllerScreen extends StatefulWidget {
   final VoidCallback onDisconnected;
 
-  const ControllerScreen({
-    super.key,
-    required this.onDisconnected,
-  });
+  const ControllerScreen({super.key, required this.onDisconnected});
 
   @override
   State<ControllerScreen> createState() => _ControllerScreenState();
@@ -25,7 +22,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
   String cmdStop = 'S';
   String cmdHornOn = 'H';
   String cmdHornOff = 'h';
-  
+
   bool headlightsOn = false;
   double speedPercentage = 50;
   final ScrollController _scrollController = ScrollController();
@@ -81,7 +78,12 @@ class _ControllerScreenState extends State<ControllerScreen> {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 20),
+              padding: EdgeInsets.fromLTRB(
+                20,
+                20,
+                20,
+                MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,10 +115,13 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   const Divider(color: Colors.white10, height: 20),
                   const Text(
                     "Assign what characters are sent to the Arduino when each button is pressed:",
-                    style: TextStyle(color: RobotTheme.textSecondary, fontSize: 12),
+                    style: TextStyle(
+                      color: RobotTheme.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
                   const SizedBox(height: 15),
-                  
+
                   // Command fields
                   Row(
                     children: [
@@ -128,7 +133,9 @@ class _ControllerScreenState extends State<ControllerScreen> {
                       ),
                       const SizedBox(width: 15),
                       Expanded(
-                        child: _buildConfigField("Backward", cmdBackward, (val) {
+                        child: _buildConfigField("Backward", cmdBackward, (
+                          val,
+                        ) {
                           setState(() => cmdBackward = val);
                           setModalState(() => cmdBackward = val);
                         }),
@@ -146,7 +153,9 @@ class _ControllerScreenState extends State<ControllerScreen> {
                       ),
                       const SizedBox(width: 15),
                       Expanded(
-                        child: _buildConfigField("Steer Right", cmdRight, (val) {
+                        child: _buildConfigField("Steer Right", cmdRight, (
+                          val,
+                        ) {
                           setState(() => cmdRight = val);
                           setModalState(() => cmdRight = val);
                         }),
@@ -157,14 +166,18 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: _buildConfigField("Release Stop", cmdStop, (val) {
+                        child: _buildConfigField("Release Stop", cmdStop, (
+                          val,
+                        ) {
                           setState(() => cmdStop = val);
                           setModalState(() => cmdStop = val);
                         }),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
-                        child: _buildConfigField("Horn Toggle", cmdHornOn, (val) {
+                        child: _buildConfigField("Horn Toggle", cmdHornOn, (
+                          val,
+                        ) {
                           setState(() => cmdHornOn = val);
                           setModalState(() => cmdHornOn = val);
                         }),
@@ -190,7 +203,9 @@ class _ControllerScreenState extends State<ControllerScreen> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent.withOpacity(0.1),
+                        backgroundColor: Colors.redAccent.withValues(
+                          alpha: 0.1,
+                        ),
                         side: const BorderSide(color: Colors.redAccent),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -198,7 +213,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
                       ),
                       child: const Text(
                         "RESET TO DEFAULTS",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -212,17 +230,28 @@ class _ControllerScreenState extends State<ControllerScreen> {
     );
   }
 
-  Widget _buildConfigField(String label, String value, Function(String) onChanged) {
+  Widget _buildConfigField(
+    String label,
+    String value,
+    Function(String) onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 6),
         TextField(
-          controller: TextEditingController(text: value)..selection = TextSelection.fromPosition(TextPosition(offset: value.length)),
+          controller: TextEditingController(text: value)
+            ..selection = TextSelection.fromPosition(
+              TextPosition(offset: value.length),
+            ),
           onChanged: onChanged,
           maxLength: 5,
           style: const TextStyle(color: Colors.white, fontFamily: 'monospace'),
@@ -230,7 +259,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
             counterText: "",
             filled: true,
             fillColor: Colors.black26,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: Colors.white10),
@@ -282,7 +314,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             bool isLandscape = constraints.maxWidth > constraints.maxHeight;
-            
+
             if (isLandscape) {
               return Row(
                 children: [
@@ -300,7 +332,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                       ),
                     ),
                   ),
-                  
+
                   // Right Side: Terminal Log
                   Expanded(
                     flex: 4,
@@ -316,36 +348,52 @@ class _ControllerScreenState extends State<ControllerScreen> {
                 children: [
                   // Top Panel: Speed and Auxiliary controllers
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Headlight Toggle
                         _buildToggleButton(
-                          icon: headlightsOn ? Icons.light_mode : Icons.light_mode_outlined,
+                          icon: headlightsOn
+                              ? Icons.light_mode
+                              : Icons.light_mode_outlined,
                           label: headlightsOn ? "LIGHTS ON" : "LIGHTS OFF",
                           isActive: headlightsOn,
                           onPressed: () => _toggleHeadlights(btService),
                           activeColor: RobotTheme.neonAmber,
-                          glow: headlightsOn ? RobotTheme.orangeGlow(radius: 8) : null,
+                          glow: headlightsOn
+                              ? RobotTheme.orangeGlow(radius: 8)
+                              : null,
                         ),
                         // Simulated/Real Badge
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
-                            color: btService.isSimulation 
-                                ? RobotTheme.neonPurple.withOpacity(0.1) 
-                                : RobotTheme.neonTeal.withOpacity(0.1),
+                            color: btService.isSimulation
+                                ? RobotTheme.neonPurple.withValues(alpha: 0.1)
+                                : RobotTheme.neonTeal.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: btService.isSimulation ? RobotTheme.neonPurple : RobotTheme.neonTeal,
+                              color: btService.isSimulation
+                                  ? RobotTheme.neonPurple
+                                  : RobotTheme.neonTeal,
                               width: 1,
                             ),
                           ),
                           child: Text(
-                            btService.isSimulation ? "MOCK SIMULATOR" : "PHYSICAL HARDWARE",
+                            btService.isSimulation
+                                ? "MOCK SIMULATOR"
+                                : "PHYSICAL HARDWARE",
                             style: TextStyle(
-                              color: btService.isSimulation ? RobotTheme.neonPurple : RobotTheme.neonTeal,
+                              color: btService.isSimulation
+                                  ? RobotTheme.neonPurple
+                                  : RobotTheme.neonTeal,
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.0,
@@ -354,8 +402,10 @@ class _ControllerScreenState extends State<ControllerScreen> {
                         ),
                         // Horn Trigger Button
                         Listener(
-                          onPointerDown: (_) => _sendAction(btService, cmdHornOn),
-                          onPointerUp: (_) => _sendAction(btService, cmdHornOff),
+                          onPointerDown: (_) =>
+                              _sendAction(btService, cmdHornOn),
+                          onPointerUp: (_) =>
+                              _sendAction(btService, cmdHornOff),
                           child: _buildToggleButton(
                             icon: Icons.volume_up,
                             label: "HORN HELD",
@@ -381,17 +431,17 @@ class _ControllerScreenState extends State<ControllerScreen> {
 
                   // Speed Slider
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 5,
+                    ),
                     child: _buildSpeedSlider(btService),
                   ),
 
                   const SizedBox(height: 10),
 
                   // Bottom: Live Serial Log Terminal
-                  Expanded(
-                    flex: 4,
-                    child: _buildTerminalLog(btService),
-                  ),
+                  Expanded(flex: 4, child: _buildTerminalLog(btService)),
                 ],
               );
             }
@@ -412,18 +462,24 @@ class _ControllerScreenState extends State<ControllerScreen> {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        backgroundColor: isActive ? activeColor.withOpacity(0.15) : Colors.white.withOpacity(0.02),
+        backgroundColor: isActive
+            ? activeColor.withValues(alpha: 0.15)
+            : Colors.white.withValues(alpha: 0.02),
         side: BorderSide(
           color: isActive ? activeColor : Colors.white24,
           width: 1.5,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: isActive ? activeColor : RobotTheme.textSecondary),
+          Icon(
+            icon,
+            size: 18,
+            color: isActive ? activeColor : RobotTheme.textSecondary,
+          ),
           const SizedBox(width: 8),
           Text(
             label,
@@ -462,7 +518,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                 activeTrackColor: RobotTheme.neonCyan,
                 inactiveTrackColor: Colors.white12,
                 thumbColor: RobotTheme.neonCyan,
-                overlayColor: RobotTheme.neonCyan.withOpacity(0.2),
+                overlayColor: RobotTheme.neonCyan.withValues(alpha: 0.2),
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
                 overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
               ),
@@ -491,20 +547,20 @@ class _ControllerScreenState extends State<ControllerScreen> {
       builder: (context, c) {
         double diameter = math.min(c.maxHeight * 0.9, 240.0);
         if (diameter < 180) diameter = 180;
-        
+
         return Container(
           width: diameter,
           height: diameter,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.01),
+            color: Colors.white.withValues(alpha: 0.01),
             border: Border.all(
-              color: RobotTheme.neonCyan.withOpacity(0.15),
+              color: RobotTheme.neonCyan.withValues(alpha: 0.15),
               width: 4,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 blurRadius: 16,
                 spreadRadius: 2,
               ),
@@ -520,13 +576,13 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: RobotTheme.neonPurple.withOpacity(0.1),
+                      color: RobotTheme.neonPurple.withValues(alpha: 0.1),
                       width: 2,
                     ),
                   ),
                 ),
               ),
-              
+
               // Center Stop Indicator Badge
               Center(
                 child: Container(
@@ -539,7 +595,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   child: Center(
                     child: Icon(
                       Icons.stop,
-                      color: Colors.redAccent.withOpacity(0.5),
+                      color: Colors.redAccent.withValues(alpha: 0.5),
                       size: 24,
                     ),
                   ),
@@ -547,7 +603,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
               ),
 
               // Directional Buttons (F, B, L, R)
-              
+
               // Forward Button (Top)
               Positioned(
                 top: 8,
@@ -563,7 +619,7 @@ class _ControllerScreenState extends State<ControllerScreen> {
                   ),
                 ),
               ),
-              
+
               // Backward Button (Bottom)
               Positioned(
                 bottom: 8,
@@ -678,7 +734,9 @@ class _ControllerScreenState extends State<ControllerScreen> {
                     IconButton(
                       icon: Icon(
                         Icons.swap_vert,
-                        color: autoScroll ? RobotTheme.neonCyan : Colors.white24,
+                        color: autoScroll
+                            ? RobotTheme.neonCyan
+                            : Colors.white24,
                         size: 14,
                       ),
                       tooltip: "Auto Scroll",
@@ -692,7 +750,11 @@ class _ControllerScreenState extends State<ControllerScreen> {
                     ),
                     // Clear logs
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.white54, size: 14),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.white54,
+                        size: 14,
+                      ),
                       tooltip: "Clear Terminal",
                       onPressed: () => service.clearLogs(),
                       constraints: const BoxConstraints(),
@@ -710,13 +772,20 @@ class _ControllerScreenState extends State<ControllerScreen> {
                 ? const Center(
                     child: Text(
                       "No console data. Hold controller keys to send commands.",
-                      style: TextStyle(color: Colors.white24, fontSize: 10, fontFamily: 'monospace'),
+                      style: TextStyle(
+                        color: Colors.white24,
+                        fontSize: 10,
+                        fontFamily: 'monospace',
+                      ),
                     ),
                   )
                 : ListView.builder(
                     controller: _scrollController,
                     itemCount: service.logs.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
                       final log = service.logs[index];
@@ -725,10 +794,11 @@ class _ControllerScreenState extends State<ControllerScreen> {
                         color = RobotTheme.neonCyan;
                       } else if (log.contains("[RX]")) {
                         color = RobotTheme.neonTeal;
-                      } else if (log.contains("failed") || log.contains("Error")) {
+                      } else if (log.contains("failed") ||
+                          log.contains("Error")) {
                         color = Colors.redAccent;
                       }
-                      
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
@@ -797,7 +867,9 @@ class _TactileButtonState extends State<_TactileButton> {
         width: 54,
         height: 54,
         decoration: BoxDecoration(
-          color: _isPressed ? Colors.white.withOpacity(0.05) : RobotTheme.surfaceDark,
+          color: _isPressed
+              ? Colors.white.withValues(alpha: 0.05)
+              : RobotTheme.surfaceDark,
           shape: BoxShape.circle,
           border: Border.all(
             color: _isPressed ? Colors.white : Colors.white12,

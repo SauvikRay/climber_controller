@@ -32,7 +32,7 @@ void setup() {
   // Note: HC-05 and HC-06 modules use 9600 Baud by default.
   // Connect HC-05 TX to Arduino RX (Pin 0) and HC-05 RX to Arduino TX (Pin 1).
   // REMEMBER: Disconnect the Bluetooth RX/TX lines when uploading this sketch!
-  Serial.begin(9600);
+  Serial.begin(38400);
   
   // Print status to debug console if connected to computer
   Serial.println("Arduino Bluetooth Controller Test Ready.");

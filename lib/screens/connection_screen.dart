@@ -1,4 +1,7 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../services/bluetooth_service.dart';
@@ -53,7 +56,10 @@ class _ConnectionScreenState extends State<ConnectionScreen>
     if (widget.isSimulationMode) {
       setState(() => _permissionsGranted = true);
     } else {
+      PermissionStatus status = await Permission.bluetooth.request();
+      dev.log("PermissionStatus==>$status");
       bool granted = await btService.requestPermissions();
+      dev.log("Bluetooth permission==>$granted");
       setState(() => _permissionsGranted = granted);
       if (!granted) {
         if (mounted) {
@@ -123,7 +129,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: RobotTheme.neonPurple.withOpacity(0.15),
+                color: RobotTheme.neonPurple.withValues(alpha: 0.15),
                 // blurRadius: 100,
               ),
             ),
@@ -136,7 +142,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: RobotTheme.neonCyan.withOpacity(0.12),
+                color: RobotTheme.neonCyan.withValues(alpha: 0.12),
                 // blurRadius: 90,
               ),
             ),
@@ -190,7 +196,11 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                               ],
                             ),
                             // Glass status indicator
-                            _buildConnectionBadge(btService.connectionState),
+                            Expanded(
+                              child: _buildConnectionBadge(
+                                btService.connectionState,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 25),
@@ -228,8 +238,9 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: RobotTheme.neonCyan
-                                              .withOpacity(1.0 - progress),
+                                          color: RobotTheme.neonCyan.withValues(
+                                            alpha: 1.0 - progress,
+                                          ),
                                           width: 2,
                                         ),
                                       ),
@@ -253,7 +264,9 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                                       gradient: SweepGradient(
                                         center: Alignment.center,
                                         colors: [
-                                          RobotTheme.neonCyan.withOpacity(0.3),
+                                          RobotTheme.neonCyan.withValues(
+                                            alpha: 0.3,
+                                          ),
                                           Colors.transparent,
                                         ],
                                         stops: const [0.2, 1.0],
@@ -455,7 +468,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: RobotTheme.glassCardDecoration(
         borderColor: widget.isSimulationMode
-            ? RobotTheme.neonPurple.withOpacity(0.4)
+            ? RobotTheme.neonPurple.withValues(alpha: 0.4)
             : Colors.white10,
       ),
       child: Row(
@@ -464,8 +477,8 @@ class _ConnectionScreenState extends State<ConnectionScreen>
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: widget.isSimulationMode
-                  ? RobotTheme.neonPurple.withOpacity(0.15)
-                  : Colors.white.withOpacity(0.05),
+                  ? RobotTheme.neonPurple.withValues(alpha: 0.15)
+                  : Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -512,7 +525,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               widget.onModeToggle(val);
             },
             activeColor: RobotTheme.neonPurple,
-            activeTrackColor: RobotTheme.neonPurple.withOpacity(0.3),
+            activeTrackColor: RobotTheme.neonPurple.withValues(alpha: 0.3),
             inactiveThumbColor: RobotTheme.textSecondary,
             inactiveTrackColor: Colors.grey.shade800,
           ),
@@ -550,11 +563,14 @@ class _ConnectionScreenState extends State<ConnectionScreen>
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: badgeColor.withOpacity(0.1),
+        color: badgeColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: badgeColor.withOpacity(0.5), width: 1.5),
+        border: Border.all(
+          color: badgeColor.withValues(alpha: 0.5),
+          width: 1.5,
+        ),
         boxShadow: glow,
       ),
       child: Row(
@@ -568,7 +584,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 5),
           Text(
             text,
             style: TextStyle(
@@ -596,7 +612,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: RobotTheme.glassCardDecoration(
         borderColor: isConnectingThis
-            ? RobotTheme.neonOrange.withOpacity(0.5)
+            ? RobotTheme.neonOrange.withValues(alpha: 0.5)
             : Colors.white10,
       ),
       child: Row(
@@ -607,12 +623,12 @@ class _ConnectionScreenState extends State<ConnectionScreen>
             height: 44,
             decoration: BoxDecoration(
               color: isConnectingThis
-                  ? RobotTheme.neonOrange.withOpacity(0.1)
-                  : RobotTheme.neonCyan.withOpacity(0.05),
+                  ? RobotTheme.neonOrange.withValues(alpha: 0.1)
+                  : RobotTheme.neonCyan.withValues(alpha: 0.05),
               shape: BoxShape.circle,
               border: Border.all(
                 color: isConnectingThis
-                    ? RobotTheme.neonOrange.withOpacity(0.3)
+                    ? RobotTheme.neonOrange.withValues(alpha: 0.3)
                     : Colors.white10,
                 width: 1,
               ),
@@ -686,7 +702,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                   side: BorderSide(
-                    color: RobotTheme.neonCyan.withOpacity(0.6),
+                    color: RobotTheme.neonCyan.withValues(alpha: 0.6),
                     width: 1.5,
                   ),
                 ),
@@ -711,7 +727,7 @@ class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = RobotTheme.neonCyan.withOpacity(0.035)
+      ..color = RobotTheme.neonCyan.withValues(alpha: 0.035)
       ..strokeWidth = 1.0;
 
     const double step = 30.0;
