@@ -368,38 +368,6 @@ class _ControllerScreenState extends State<ControllerScreen> {
                               ? RobotTheme.orangeGlow(radius: 8)
                               : null,
                         ),
-                        // Simulated/Real Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: btService.isSimulation
-                                ? RobotTheme.neonPurple.withValues(alpha: 0.1)
-                                : RobotTheme.neonTeal.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: btService.isSimulation
-                                  ? RobotTheme.neonPurple
-                                  : RobotTheme.neonTeal,
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            btService.isSimulation
-                                ? "MOCK SIMULATOR"
-                                : "PHYSICAL HARDWARE",
-                            style: TextStyle(
-                              color: btService.isSimulation
-                                  ? RobotTheme.neonPurple
-                                  : RobotTheme.neonTeal,
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.0,
-                            ),
-                          ),
-                        ),
                         // Horn Trigger Button
                         Listener(
                           onPointerDown: (_) =>

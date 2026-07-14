@@ -9,15 +9,8 @@ import '../theme/theme.dart';
 
 class ConnectionScreen extends StatefulWidget {
   final VoidCallback onConnected;
-  final Function(bool) onModeToggle;
-  final bool isSimulationMode;
 
-  const ConnectionScreen({
-    super.key,
-    required this.onConnected,
-    required this.onModeToggle,
-    required this.isSimulationMode,
-  });
+  const ConnectionScreen({super.key, required this.onConnected});
 
   @override
   State<ConnectionScreen> createState() => _ConnectionScreenState();
@@ -52,35 +45,45 @@ class _ConnectionScreenState extends State<ConnectionScreen>
     final btService = Provider.of<BluetoothService>(context, listen: false);
     await btService.init();
 
-    // In simulator mode, we don't strictly require Android system permissions
-    if (widget.isSimulationMode) {
-      setState(() => _permissionsGranted = true);
-    } else {
-      PermissionStatus status = await Permission.bluetooth.request();
-      dev.log("PermissionStatus==>$status");
-      bool granted = await btService.requestPermissions();
-      dev.log("Bluetooth permission==>$granted");
-      setState(() => _permissionsGranted = granted);
-      if (!granted) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Bluetooth and location permissions are required for physical connection.",
-              ),
-              backgroundColor: Colors.redAccent,
+    bool granted = await btService.requestPermissions();
+    dev.log("Permissions granted==>$granted");
+    setState(() => _permissionsGranted = granted);
+    if (!granted) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: RobotTheme.surfaceDark,
+            title: const Text(
+              "Permissions Required",
+              style: TextStyle(color: Colors.white),
             ),
-          );
-        }
+            content: const Text(
+              "Bluetooth and location permissions are required for physical connection. Please allow them in App Settings.",
+              style: TextStyle(color: Colors.white70),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(color: RobotTheme.neonCyan),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  openAppSettings();
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Open Settings",
+                  style: TextStyle(color: RobotTheme.neonPurple),
+                ),
+              ),
+            ],
+          ),
+        );
       }
-    }
-  }
-
-  @override
-  void didUpdateWidget(covariant ConnectionScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isSimulationMode != oldWidget.isSimulationMode) {
-      _checkPermissionsAndInit();
     }
   }
 
@@ -205,8 +208,42 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                         ),
                         const SizedBox(height: 25),
 
-                        // Simulator Mode Banner Card
-                        _buildSimulatorToggleCard(btService),
+                        if (!btService.isBluetoothOn)
+                          Container(
+                            margin: const EdgeInsets.only(top: 15),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.redAccent.withValues(alpha: 0.5),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.bluetooth_disabled,
+                                  color: Colors.redAccent,
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Text(
+                                    "Bluetooth is turned off. Please enable Bluetooth on your device to connect.",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Colors.redAccent,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -281,8 +318,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                           // Scanning Core Button
                           GestureDetector(
                             onTap: () {
-                              if (!_permissionsGranted &&
-                                  !widget.isSimulationMode) {
+                              if (!_permissionsGranted) {
                                 _checkPermissionsAndInit();
                               } else {
                                 _toggleScan(btService);
@@ -460,77 +496,6 @@ class _ConnectionScreenState extends State<ConnectionScreen>
         ),
         if (trailing != null) trailing,
       ],
-    );
-  }
-
-  Widget _buildSimulatorToggleCard(BluetoothService btService) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: RobotTheme.glassCardDecoration(
-        borderColor: widget.isSimulationMode
-            ? RobotTheme.neonPurple.withValues(alpha: 0.4)
-            : Colors.white10,
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: widget.isSimulationMode
-                  ? RobotTheme.neonPurple.withValues(alpha: 0.15)
-                  : Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              widget.isSimulationMode
-                  ? Icons.terminal
-                  : Icons.toggle_on_outlined,
-              color: widget.isSimulationMode
-                  ? RobotTheme.neonPurple
-                  : RobotTheme.textSecondary,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Interactive Simulation Mode",
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: widget.isSimulationMode
-                        ? Colors.white
-                        : RobotTheme.textPrimary,
-                  ),
-                ),
-                Text(
-                  widget.isSimulationMode
-                      ? "Running fully functional software mock sandbox."
-                      : "Connecting directly to real Android hardware.",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 11,
-                    color: RobotTheme.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Switch(
-            value: widget.isSimulationMode,
-            onChanged: (val) {
-              _radarController.stop();
-              _pulseController.stop();
-              widget.onModeToggle(val);
-            },
-            activeColor: RobotTheme.neonPurple,
-            activeTrackColor: RobotTheme.neonPurple.withValues(alpha: 0.3),
-            inactiveThumbColor: RobotTheme.textSecondary,
-            inactiveTrackColor: Colors.grey.shade800,
-          ),
-        ],
-      ),
     );
   }
 

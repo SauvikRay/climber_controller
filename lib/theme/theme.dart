@@ -5,14 +5,14 @@ class RobotTheme {
   static const Color spaceDark = Color(0xFF070B19);
   static const Color surfaceDark = Color(0xFF0E152B);
   static const Color cardDark = Color(0x9A162244); // semi-transparent glass
-  
+
   // Neon Accents
   static const Color neonCyan = Color(0xFF00F0FF);
   static const Color neonTeal = Color(0xFF05FFC8);
   static const Color neonPurple = Color(0xFFAC26FF);
   static const Color neonOrange = Color(0xFFFF851B);
   static const Color neonAmber = Color(0xFFFFD700);
-  
+
   // Neutral Text
   static const Color textPrimary = Color(0xFFF1F5F9);
   static const Color textSecondary = Color(0xFF94A3B8);
@@ -41,12 +41,12 @@ class RobotTheme {
   static List<BoxShadow> cyanGlow({double radius = 10, double opacity = 0.5}) {
     return [
       BoxShadow(
-        color: neonCyan.withOpacity(opacity),
+        color: neonCyan.withValues(alpha: opacity),
         blurRadius: radius,
         spreadRadius: 1,
       ),
       BoxShadow(
-        color: neonCyan.withOpacity(opacity * 0.4),
+        color: neonCyan.withValues(alpha: opacity * 0.4),
         blurRadius: radius * 2,
         spreadRadius: 2,
       ),
@@ -56,42 +56,48 @@ class RobotTheme {
   static List<BoxShadow> tealGlow({double radius = 10, double opacity = 0.5}) {
     return [
       BoxShadow(
-        color: neonTeal.withOpacity(opacity),
+        color: neonTeal.withValues(alpha: opacity),
         blurRadius: radius,
         spreadRadius: 1,
       ),
       BoxShadow(
-        color: neonTeal.withOpacity(opacity * 0.4),
+        color: neonTeal.withValues(alpha: opacity * 0.4),
         blurRadius: radius * 2,
         spreadRadius: 2,
       ),
     ];
   }
 
-  static List<BoxShadow> purpleGlow({double radius = 10, double opacity = 0.5}) {
+  static List<BoxShadow> purpleGlow({
+    double radius = 10,
+    double opacity = 0.5,
+  }) {
     return [
       BoxShadow(
-        color: neonPurple.withOpacity(opacity),
+        color: neonPurple.withValues(alpha: opacity),
         blurRadius: radius,
         spreadRadius: 1,
       ),
       BoxShadow(
-        color: neonPurple.withOpacity(opacity * 0.4),
+        color: neonPurple.withValues(alpha: opacity * 0.4),
         blurRadius: radius * 2,
         spreadRadius: 2,
       ),
     ];
   }
 
-  static List<BoxShadow> orangeGlow({double radius = 10, double opacity = 0.5}) {
+  static List<BoxShadow> orangeGlow({
+    double radius = 10,
+    double opacity = 0.5,
+  }) {
     return [
       BoxShadow(
-        color: neonOrange.withOpacity(opacity),
+        color: neonOrange.withValues(alpha: opacity),
         blurRadius: radius,
         spreadRadius: 1,
       ),
       BoxShadow(
-        color: neonOrange.withOpacity(opacity * 0.4),
+        color: neonOrange.withValues(alpha: opacity * 0.4),
         blurRadius: radius * 2,
         spreadRadius: 2,
       ),
@@ -99,14 +105,16 @@ class RobotTheme {
   }
 
   // Card Decorations
-  static BoxDecoration glassCardDecoration({Color borderColor = Colors.white10}) {
+  static BoxDecoration glassCardDecoration({
+    Color borderColor = Colors.white10,
+  }) {
     return BoxDecoration(
       color: cardDark,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(color: borderColor, width: 1.5),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.black.withValues(alpha: 0.4),
           blurRadius: 12,
           spreadRadius: 2,
           offset: const Offset(0, 4),
@@ -124,9 +132,23 @@ class RobotTheme {
       cardColor: surfaceDark,
       fontFamily: 'Roboto',
       textTheme: const TextTheme(
-        headlineLarge: TextStyle(color: textPrimary, fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 1.2),
-        headlineMedium: TextStyle(color: textPrimary, fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 1.0),
-        titleLarge: TextStyle(color: textPrimary, fontSize: 18, fontWeight: FontWeight.w600),
+        headlineLarge: TextStyle(
+          color: textPrimary,
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
+        headlineMedium: TextStyle(
+          color: textPrimary,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.0,
+        ),
+        titleLarge: TextStyle(
+          color: textPrimary,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
         bodyLarge: TextStyle(color: textPrimary, fontSize: 16),
         bodyMedium: TextStyle(color: textSecondary, fontSize: 14),
         bodySmall: TextStyle(color: textMuted, fontSize: 12),

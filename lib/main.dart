@@ -17,32 +17,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _isSimulationMode = true;
   late BluetoothService _btService;
 
   @override
   void initState() {
     super.initState();
-    // Default to simulation mode so users can test immediately out-of-the-box
-    _btService = SimulationBluetoothService();
-    _btService.init();
-  }
-
-  void _toggleSimulationMode(bool enableSimulation) {
-    if (_isSimulationMode == enableSimulation) return;
-
-    // Disconnect and clean up previous service
-    _btService.disconnect();
-    
-    // Replace service implementation
-    setState(() {
-      _isSimulationMode = enableSimulation;
-      _btService = enableSimulation 
-          ? SimulationBluetoothService() 
-          : PhysicalBluetoothService();
-    });
-
-    // Initialize the new service
+    _btService = PhysicalBluetoothService();
     _btService.init();
   }
 
@@ -82,8 +62,6 @@ class _MyAppState extends State<MyApp> {
                     )
                   : ConnectionScreen(
                       key: const ValueKey('connection_screen'),
-                      isSimulationMode: _isSimulationMode,
-                      onModeToggle: _toggleSimulationMode,
                       onConnected: () {
                         // Handled reactively by the Consumer builder
                       },
